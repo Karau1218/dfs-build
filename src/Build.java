@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Set;
 
 
-public class Build {
+public class Build { 
 
   /**
    * Prints words that are reachable from the given vertex and are strictly shorter than k characters.
