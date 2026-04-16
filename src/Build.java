@@ -14,6 +14,25 @@ public class Build {
    * @param k the maximum word length (exclusive)
    */
   public static void printShortWords(Vertex<String> vertex, int k) {
+     if (vertex == null) return;
+
+    Set<Vertex<String>> visited = new HashSet<>();
+    dfsShort(vertex, k, visited);
+}
+
+private static void dfsShort(Vertex<String> v, int k, Set<Vertex<String>> visited) {
+    if (v == null || visited.contains(v)) return;
+
+    visited.add(v);
+
+    if (v.getValue().length() < k) {
+        System.out.println(v.getValue());
+    }
+
+    for (Vertex<String> next : v.getNeighbors()) {
+        dfsShort(next, k, visited);
+    }
+
   }
 
   /**
@@ -23,7 +42,26 @@ public class Build {
    * @return the longest reachable word, or an empty string if the vertex is null
    */
   public static String longestWord(Vertex<String> vertex) {
-    return "";
+    if (vertex == null) return "";
+
+    Set<Vertex<String>> visited = new HashSet<>();
+    return dfsLongest(vertex, visited, "");
+}
+
+private static String dfsLongest(Vertex<String> v, Set<Vertex<String>> visited, String longest) {
+    if (v == null || visited.contains(v)) return longest;
+
+    visited.add(v);
+
+    if (v.getValue().length() > longest.length()) {
+        longest = v.getValue();
+    }
+
+    for (Vertex<String> next : v.getNeighbors()) {
+        longest = dfsLongest(next, visited, longest);
+    }
+
+    return longest;
   }
 
   /**
