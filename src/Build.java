@@ -25,11 +25,11 @@ private static void dfsShort(Vertex<String> v, int k, Set<Vertex<String>> visite
 
     visited.add(v);
 
-    if (v.getValue().length() < k) {
-        System.out.println(v.getValue());
+    if (v.data.length() < k) {
+        System.out.println(v.data);
     }
 
-    for (Vertex<String> next : v.getNeighbors()) {
+    for (Vertex<String> next : v.neighbors) {
         dfsShort(next, k, visited);
     }
 
@@ -53,11 +53,11 @@ private static String dfsLongest(Vertex<String> v, Set<Vertex<String>> visited, 
 
     visited.add(v);
 
-    if (v.getValue().length() > longest.length()) {
-        longest = v.getValue();
+    if (v.data.length() > longest.length()) {
+        longest = v.data;
     }
 
-    for (Vertex<String> next : v.getNeighbors()) {
+    for (Vertex<String> next : v.neighbors) {
         longest = dfsLongest(next, visited, longest);
     }
 
@@ -72,6 +72,23 @@ private static String dfsLongest(Vertex<String> v, Set<Vertex<String>> visited, 
    * @param <T> the type of values stored in the vertices
    */
   public static <T> void printSelfLoopers(Vertex<T> vertex) {
+    if (vertex == null) return;
+
+    Set<Vertex<T>> visited = new HashSet<>();
+    dfsSelf(vertex, visited);
+}
+  private static <T> void dfsSelf(Vertex<T> v, Set<Vertex<T>> visited) {
+    if (v == null || visited.contains(v)) return;
+
+    visited.add(v);
+
+    if (v.neighbors.contains(v)) {
+        System.out.println(v.data);
+    }
+
+    for (Vertex<T> next : v.neighbors) {
+        dfsSelf(next, visited);
+    }
   }
 
   /**
@@ -83,7 +100,27 @@ private static String dfsLongest(Vertex<String> v, Set<Vertex<String>> visited, 
    * @return true if the destination is reachable from the start, false otherwise
    */
   public static boolean canReach(Airport start, Airport destination) {
+    if (start == null || destination == null) return false;
+    if (start == destination) return true;
+
+    Set<Airport> visited = new HashSet<>();
+    return dfsAirport(start, destination, visited);
+}
+
+private static boolean dfsAirport(Airport current, Airport destination, Set<Airport> visited) {
+    if (current == destination) return true;
+    if (visited.contains(current)) return false;
+
+    visited.add(current);
+
+    for (Airport next : current.getOutboundFlights()) {
+        if (dfsAirport(next, destination, visited)) {
+            return true;
+        }
+    }
+
     return false;
+
   }
 
   /**
@@ -96,6 +133,7 @@ private static String dfsLongest(Vertex<String> v, Set<Vertex<String>> visited, 
    * @return a set of values that cannot be reached from the starting value
    */
   public static <T> Set<T> unreachable(Map<T, List<T>> graph, T starting) {
-    return new HashSet<>();
+    // return new HashSet<>();
+     
   }
 }
