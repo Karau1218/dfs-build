@@ -134,6 +134,34 @@ private static boolean dfsAirport(Airport current, Airport destination, Set<Airp
    */
   public static <T> Set<T> unreachable(Map<T, List<T>> graph, T starting) {
     // return new HashSet<>();
-     
+     Set<T> visited = new HashSet<>();
+
+    if (starting != null && graph.containsKey(starting)) {
+        dfsGraph(graph, starting, visited);
+    }
+
+    Set<T> result = new HashSet<>();
+
+    for (T node : graph.keySet()) {
+        if (!visited.contains(node)) {
+            result.add(node);
+        }
+    }
+
+    return result;
+}
+
+private static <T> void dfsGraph(Map<T, List<T>> graph, T current, Set<T> visited) {
+    if (current == null || visited.contains(current)) return;
+
+    visited.add(current);
+
+    List<T> neighbors = graph.get(current);
+    if (neighbors == null) return;
+
+    for (T next : neighbors) {
+        dfsGraph(graph, next, visited);
+    }
+
   }
 }
